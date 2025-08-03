@@ -1,21 +1,18 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-// 1. Define the interface with increment & decrement
 interface CountContextProps {
   count: number;
   increment: () => void;
   decrement: () => void;
 }
 
-// 2. Create the context with a default value (optional if using Provider directly)
-const CountContext = createContext<CountContextProps | undefined>(undefined);
+export const CountContext = createContext<CountContextProps | undefined>(undefined);
 
-// 3. Provider component
 export const CountProvider = ({ children }: { children: ReactNode }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number>(0);
 
-  const increment = () => setCount((prev) => prev + 1);
-  const decrement = () => setCount((prev) => prev - 1);
+  const increment = () => setCount((count) => count + 1);
+  const decrement = () => setCount((count) => (count > 0 ? count - 1 : 0));
 
   return (
     <CountContext.Provider value={{ count, increment, decrement }}>
@@ -24,7 +21,6 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// 4. Custom hook to use the context
 export const useCount = () => {
   const context = useContext(CountContext);
   if (!context) {
